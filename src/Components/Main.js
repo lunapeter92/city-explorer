@@ -4,6 +4,7 @@ import '../css/main.css';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 
+
 class Main extends React.Component {
     constructor(props){
         super(props);
@@ -12,7 +13,9 @@ class Main extends React.Component {
             lat: '',
             long: '',
             query: '',
-            map: ''
+            map: '',
+            isOpen: false,
+            error: ''
         }
     }
 
@@ -20,13 +23,18 @@ class Main extends React.Component {
         this.setState({ query: e.target.value})
     }
 
+    handleClose = () =>{
+        this.setState({isOpen: false})
+    }
+
     getData = async() => {
         const url = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_API_KEY}&q=${this.state.query}&format=json`;
 
         const res = await axios.get(url)
-            .catch(function(error){
-                console.log(error)
-            });
+            // .catch(function(error){
+            //     console.log(error)
+            //     console.log(error)
+            // });
         console.log(res)
         this.setState({locationData: res, lat: res.data[0].lat, long: res.data[0].lon});
 
@@ -58,10 +66,10 @@ class Main extends React.Component {
                     </ListGroup>
                 </Card>
 
-                <img className="image" src={this.state.map}></img>
-
+                <img alt="city-map" className="image" src={this.state.map}></img>
+                
             </div>
-
+            
             
         )
     }
