@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import '../css/main.css';
 import Card from 'react-bootstrap/Card';
+import Weather from './Weather'
 import ListGroup from 'react-bootstrap/ListGroup';
 
 
@@ -15,7 +16,8 @@ class Main extends React.Component {
             query: '',
             map: '',
             isOpen: false,
-            error: ''
+            error: '',
+            weather: [],
         }
     }
 
@@ -29,7 +31,7 @@ class Main extends React.Component {
 
     getData = async() => {
         const url = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_API_KEY}&q=${this.state.query}&format=json`;
-
+       
         const res = await axios.get(url)
             // .catch(function(error){
             //     console.log(error)
@@ -37,11 +39,19 @@ class Main extends React.Component {
             // });
         console.log(res)
         this.setState({locationData: res, lat: res.data[0].lat, long: res.data[0].lon});
+       
+
 
         const mapurl = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_API_KEY}&center=${res.data[0].lat},${res.data[0].lon}&format=jpg&zoom=12&SameSite=None`
-       
         this.setState({map: mapurl})
 
+        const weatherUrl = `http://localhost:3001`
+        
+        const response = await axios.get(`${weatherUrl}/weather`, {params: {searchQuery: this.state.query, lon: this.state.long, lat: this.state.lat}});
+        console.log('response: ', response)
+        this.setState({weather: response})
+
+        
 
     }
 
@@ -66,8 +76,8 @@ class Main extends React.Component {
                     </ListGroup>
                 </Card>
 
-                <img alt="city-map" className="image" src={this.state.map}></img>
-                
+               {this.state.map && <img alt="city-map" className="image" src={this.state.map}></img>}
+                {this.state.weather && <Weather weatherDescription={this.state.weather.description} name={this.state.weather.city_name} />}
             </div>
             
             
