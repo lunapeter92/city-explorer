@@ -8,8 +8,8 @@ class Weather extends React.Component{
                 <Card style={{width: '18rem'}}>
                     <Card.Body>
                         <Card.Title>{this.props.name} Weather</Card.Title>
-                        {/* <Card.Text>{this.props.weatherData.datetime}</Card.Text> */}
-                        {/* <Card.Text>{this.props.weatherDescription}</Card.Text> */}
+                        <Card.Text>{this.props.datetime}</Card.Text> 
+                        <Card.Text>{this.props.description}</Card.Text>
                     </Card.Body>
                 </Card>
             </div>

@@ -4,6 +4,8 @@ import '../css/main.css';
 import Card from 'react-bootstrap/Card';
 import Weather from './Weather'
 import ListGroup from 'react-bootstrap/ListGroup';
+import Movie from './Movie';
+import { getByTitle } from '@testing-library/react';
 
 
 class Main extends React.Component {
@@ -18,6 +20,7 @@ class Main extends React.Component {
             isOpen: false,
             error: '',
             weather: [],
+            movies: []
         }
     }
 
@@ -46,13 +49,20 @@ class Main extends React.Component {
         this.setState({map: mapurl})
 
         const weatherUrl = `http://localhost:3001`
-        
         const response = await axios.get(`${weatherUrl}/weather`, {params: {searchQuery: this.state.query, lon: this.state.long, lat: this.state.lat}});
-        console.log('response: ', response)
-        this.setState({weather: response})
-
+        // console.log('response: ', response)
         
+        this.setState({weather: response.data[0]})
+        console.log('Weather', this.state.weather)
 
+        const movieUrl = `http://localhost:3001/movie`;
+        const movieRes = await axios.get(`${movieUrl}`, {params: {searchQuery: this.state.query}});
+        console.log(movieRes)
+        let movieArr = movieRes.data.map(item => {
+           return item;
+        })
+        this.setState({movies: movieArr})
+        console.log(this.state.movies)
     }
 
    
@@ -77,7 +87,14 @@ class Main extends React.Component {
                 </Card>
 
                {this.state.map && <img alt="city-map" className="image" src={this.state.map}></img>}
-                {this.state.weather && <Weather weatherDescription={this.state.weather.description} name={this.state.weather.city_name} />}
+
+               {this.state.weather && <Weather datetime={this.state.weather.date} description={this.state.weather.description} />}
+                <h3>Movies</h3>
+               {this.state.movies && this.state.movies.map((item, idx) =>{
+                   return <Movie title={item.title} overview={item.overview} key={idx}/>
+               })}
+
+
             </div>
             
             
