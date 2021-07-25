@@ -48,14 +48,14 @@ class Main extends React.Component {
         const mapurl = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_API_KEY}&center=${res.data[0].lat},${res.data[0].lon}&format=jpg&zoom=12&SameSite=None`
         this.setState({map: mapurl})
 
-        const weatherUrl = `http://localhost:3001`
+        const weatherUrl = `https://ceapi.herokuapp.com/`
         const response = await axios.get(`${weatherUrl}/weather`, {params: {searchQuery: this.state.query, lon: this.state.long, lat: this.state.lat}});
         // console.log('response: ', response)
         
         this.setState({weather: response.data[0]})
         console.log('Weather', this.state.weather)
 
-        const movieUrl = `http://localhost:3001/movie`;
+        const movieUrl = `https://ceapi.herokuapp.com/movie`;
         const movieRes = await axios.get(`${movieUrl}`, {params: {searchQuery: this.state.query}});
         console.log(movieRes)
         let movieArr = movieRes.data.map(item => {
